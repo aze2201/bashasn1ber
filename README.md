@@ -21,11 +21,11 @@ THIS SCRIPT WILL HELP TO DECODE ASN1 BER encoded files.
 
 
 EXAMPLE:
-testbed1:asntmp # ./ASN1.BER -f file -b 10 -e 15
+test:asntmp # ./ASN1.BER -f file -b 10 -e 15
  + -----  OFFSET= 46 (Tag) 8  (Length) 2 ( Value ) = 021
  + -----  OFFSET= 50 (Tag) 9  (Length) 8 ( Value ) = a00640af31dcb
  + ----------  OFFSET= 52 (Tag) 0  (Length) 6 ( Value ) = 80040a
  + ---------------  OFFSET= 54 (Tag) 0  (Length) 4 ( Value ) = 0af31
  + -----  OFFSET= 60 (Tag) 11  (Length) 1 ( Value ) = ff
  + -----  OFFSET= 63 (Tag) 12  (Length) 34 ( Value ) = 3020830304631b840304c24585010286091612062149392b0400a90
-testbed1:asntmp #
+test:asntmp #

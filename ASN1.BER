@@ -1,0 +1,104 @@
+#!/bin/bash
+
+
+
+while getopts "f:e:b:" opt; do
+    case $opt in
+        e)  offsetto="$OPTARG"
+            ;;
+        f)  filename="$OPTARG"
+            ;;
+	b) offsetfrom="$OPTARG"
+    esac
+done
+
+
+check_parameters()
+{
+	if [ ! $filename ]
+	then
+		echo "File Name should be defined !!!"
+	fi
+	if [ ! $offsetfrom ]
+	then
+		offsetfrom=$(cat $tmpFile| awk -F ':' '{print $1}' | head -1)
+	fi
+	if [ -z $offsetto ]
+	then
+		if [[ $offsetto -le $offsetfrom ]]
+		then
+			echo "offsetto should be grather than offsetfrom, if not set it will set maximum by default"
+		fi
+	fi
+	if [ ! $offsetto ]
+	then
+		offsetto=$(cat $tmpFile| awk -F ':' '{print $1}' | tail -n 1)
+	fi
+}
+
+
+tmpFile=${filename}.tmp
+filename_hex=${filename}.txt
+
+
+get_line(){
+#get file read from n th line
+	head_value=$(cat $tmpFile|awk -F ':' -v head=$offsetfrom '{if (head >=  $1) print NR }' | tail -n 1)
+#get file read till n th line
+	tail_value=$(cat $tmpFile|awk -F ':' -v tail=$offsetto '{if (tail <= $1) print }' | head -1)
+}
+
+
+create_dump_file() {
+# it will create ASN structure using openssl
+	openssl asn1parse -in $filename -inform ber > $tmpFile
+# it will dump HEX of input file
+	xxd -p $filename | tr -d '\n' > $filename_hex
+}
+
+decode() {
+n=0
+cat $tmpFile| awk -v h=$offsetfrom -v t=$offsetto ' NR>=h && NR <=t ' | while read structure
+do
+# reset values
+	CDR_field=
+	Fromoffset=
+	hl=
+	l=
+	finalFrom=
+	finalEnd=
+	d=
+# make offset values 
+	Fromoffset=$(echo $structure| awk -F ':' '{print $1}')
+	hl=$(echo $structure| awk '{print $2}' | awk -F '=' '{print $2}')
+	l=$(echo $structure | sed 's/hl=/ab/g' |awk -F 'l=' '{print $2}' | awk '{print $1}')
+	d=$(echo $structure|awk -F ':' '{print $2}' | awk '{print $1}' | awk -F 'd=' '{print $2}')
+# optional for design
+	d=$(expr $d \* 5)
+	TAG=$(echo $structure|awk -F '[' '{print $2}' | awk -F ']' '{print $1}')
+	finalFrom=$(expr $Fromoffset \* 2 + 1)
+	finalEnd=$(expr $hl + $Fromoffset + $l )
+	finalEnd=$(expr $finalEnd \* 2)
+# read chunk from hex dumped file.
+	CDR_field=$(cat $filename_hex | cut -c $finalFrom-$finalEnd| awk -v hl=$hl '{hl=hl*2; print substr($1,hl+1)}')           # added awk for remove header length and print value only
+	echo " + `printf %$(( ${d} ))s| tr ' ' '-'`  OFFSET= $Fromoffset (Tag)$TAG (Length) $l ( Value ) = `echo ${CDR_field}`"
+	let " n = $n + 1 "
+done
+}
+
+main () {
+create_dump_file
+check_parameters
+if [ $? -eq 0 ]
+then
+	get_line
+	decode
+else
+	echo "Please check inout parameters !!!"
+fi
+}
+
+
+main
+
+

@@ -8,9 +8,13 @@ BER The format for Basic Encoding Rules specifies a self-describing and self-del
 
 More information https://en.wikipedia.org/wiki/X.690#BER_encoding
 
-THIS SCRIPT WILL HELP TO DECODE ASN1 BER encoded files. 1. put anyplace on Linux machine which is support openssl and run by below command ./ASN1.BER -f # full decode, WARNING: if you decode full file it can be take long time due for bash commands ./ASN1.BER -f -b 10 -e 15 # it will decode from offset 10 till 15
+THIS SCRIPT WILL HELP TO DECODE ASN1 BER encoded files. 1. put anyplace on Linux machine which is support openssl and run by below command ./ASN1.BER -f <filename>                  # full decode, WARNING: if you decode full file it can be take long time due for bash commands 
+./ASN1.BER -f <filename> -b 10 -e 15      # it will decode from offset 10 till 15
 
 If you have file structure description you can refer for covert field values to ASCII or DEC etc.
+
+
+
 EXAMPLE: test:asntmp # ./ASN1.BER -f file -b 10 -e 15
 
 ----- OFFSET= 46 (Tag) 8 (Length) 2 ( Value ) = 021

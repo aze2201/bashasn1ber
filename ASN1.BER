@@ -59,12 +59,12 @@ get_line(){
 #get file read from n th line
 	head_value=$(cat $tmpFile|awk -F ':' -v head=$offsetfrom '{if (head >= $1) print NR }' | tail -n 1)
 #get file read till n th line
-	tail_value=$(cat $tmpFile|awk -F ':' -v tail=$offsetto '{if (tail <= $1) print }' | head -1)
+	tail_value=$(cat $tmpFile|awk -F ':' -v tail=$offsetto '{if (tail <= $1) print NR }' | head -1)
 }
 
 decode() {
 n=0
-cat $tmpFile| awk -v h=$offsetfrom -v t=$offsetto ' NR>=h && NR <=t ' | while read structure
+cat $tmpFile| awk -v h=$head_value -v t=$tail_value ' NR>=h && NR <=t ' | while read structure
 do
 # reset values
 	CDR_field=
@@ -93,13 +93,14 @@ done
 }
 
 main () {
+echo "Decoding from OFFSET : $offsetfrom till OFFSET : $offsetto"
 check_parameters
 if [ $? -eq 0 ]
 then
 	get_line
 	decode
 else
-	echo "Please check input parameters !!!"
+	echo "Please check inout parameters !!!"
 fi
 }
 

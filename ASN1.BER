@@ -100,7 +100,7 @@ then
 	get_line
 	decode
 else
-	echo "Please check inout parameters !!!"
+	echo "Please check input parameters !!!"
 fi
 }
 

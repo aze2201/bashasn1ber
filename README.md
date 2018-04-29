@@ -11,7 +11,7 @@ More information https://en.wikipedia.org/wiki/X.690#BER_encoding
 THIS SCRIPT WILL HELP TO DECODE ASN1 BER encoded files. 1. put anyplace on Linux machine which is support openssl and run by below command 
 <pre>
 ./ASN1.BER -f filename                  # full decode, WARNING: if you decode full file it can be take long time due for bash commands 
-./ASN1.BER -f filename -b 10 -e 15      # it will decode from offset 10 till 15
+./ASN1.BER -f filename -b 10 -e 15      # it will decode from offset 10 to offset 15
 </pre>
 If you have file structure description you can refer for covert field values to ASCII or DEC etc.
 

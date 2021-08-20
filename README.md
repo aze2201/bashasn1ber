@@ -16,8 +16,9 @@ THIS SCRIPT WILL HELP TO DECODE ASN1 BER encoded files. 1. put anyplace on Linux
 If you have file structure description you can refer for covert field values to ASCII or DEC etc.
 
 
+EXAMPLE: 
 <pre>
-EXAMPLE: test:asntmp # ./ASN1.BER -f file -b 10 -e 15
+test:asntmp # ./ASN1.BER -f file -b 10 -e 15
 
 ----- OFFSET= 46 (Tag) 8 (Length) 2 ( Value ) = 021
 ----- OFFSET= 50 (Tag) 9 (Length) 8 ( Value ) = a00f31dcb
